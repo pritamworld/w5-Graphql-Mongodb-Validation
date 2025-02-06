@@ -1,4 +1,4 @@
-`query{
+``` query{
  	welcome
   g1: greet(name : "Pritesh")
 	g2: greet(name : "Ali")
@@ -30,7 +30,7 @@
     salary
   }
 }
-`
+```
 
 `
 mutation{
