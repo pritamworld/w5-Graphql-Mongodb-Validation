@@ -1,4 +1,5 @@
-``` query{
+``` 
+  query{
  	welcome
   g1: greet(name : "Pritesh")
 	g2: greet(name : "Ali")
@@ -32,7 +33,7 @@
 }
 ```
 
-`
+```
 mutation{
     u1: addUser(uid:1, fnm: "Pritesh", lnm: "Patel", salary: 567.90){
         uid
@@ -48,14 +49,14 @@ mutation{
         salary
     }
 }
-`
-`
+```
+```
 fragment UserFields on User{
   fnm
   lnm
 }
-`
-`
+```
+```
 mutation{
     u1: addUser(uid:1, fnm: "Pritesh", lnm: "Patel", salary: 567.90){
         uid
@@ -71,4 +72,4 @@ mutation{
         salary
     }
 }
-`
+```
