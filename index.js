@@ -1,93 +1,100 @@
 const express = require('express')
-const mongoose = require('mongoose')
 const { buildSchema } = require('graphql')
-const { graphqlHTTP } = require("express-graphql")
-const UserModel = require('./model/User')
+const { graphqlHTTP } = require('express-graphql')
+const mongoose = require('mongoose')
+const MovieModel = require('./model/Movie')
 
 const app = express()
-const SERVER_PORT = 4000
+const PORT = 4000
 
 //Schema
 const gqlSchema = buildSchema(
     `type Query{
-        welcome: String
-        greet(name: String): String
-        user: User
-        users: [User]
+        hello: String
+        greet(name: String!): String
+        welcome: [String]
+        movie: Movie
+        movies: [Movie]
+        movieByName(name: String!): Movie
     }
     
     type Mutation{
-        addUser(uid: Int, fnm: String, lnm: String, salary: Float): User
+        addMovie(mid: Int, name: String, duration:Float): Movie
     }
-
-    type User{
-        uid: Int
-        firstname: String
-        lastname: String
-        salary: Float
+    
+    type Movie{
+        _id: ID
+        mid: Int
+        name: String
+        duration:Float
     }
-    `
-)
+`)
 
-//Root Resolver
+//Resolver
 const rootResolver = {
-    welcome: () => {
-        return "Welcome to GraphQL examples"
+    hello: () => {
+        return "Hello World"
     },
-    greet: ({name})=>{ //obj.name
-        return `Hello, ${name}`
+    greet: ({name})=>{
+        return `Welcome, ${name}`
     },
-    user: async () => {
-        // const user = {
-        //     uid: 1,
-        //     fnm: "Pritesh",
-        //     lnm: "Patel",
-        //     salary: 500.50
+    welcome: ()=>{
+        return [
+            "Good Evening",
+            "Good Morning",
+            "Good Afternoon"
+        ]
+    },
+    movie: async ()=>{
+        // const movie = {
+        //     mid: 1,
+        //     name: 'Movie 1',
+        //     duration: 100.50
         // }
-        const user = await UserModel.findOne({})
-        console.log(user)
-        return user
+        const movie = await MovieModel.findOne({})
+        return movie
     },
-    users: async() => {
-        // const users = [{
-        //     uid: 1,
-        //     fnm: "Pritesh",
-        //     lnm: "Patel",
-        //     salary: 500.50
+     movies: async ()=>{
+        // const movies = [{
+        //     mid: 1,
+        //     name: 'Movie 1',
+        //     duration: 100.50
         // },
         // {
-        //     uid: 2,
-        //     fnm: "Test",
-        //     lnm: "Patel",
-        //     salary: 1500.70
+        //     mid: 2,
+        //     name: 'Movie 2',
+        //     duration: 150.00
         // }]
-        const users = await UserModel.find({})
-        console.log(users)
-        return users
+        const movies = await MovieModel.find({})
+        return movies
     },
-    addUser: async(user) => {
-        console.log(user)
-        //Insert to Database
-        const {uid, fnm, lnm, salary} = user
-        const newUser = UserModel({
-            uid,
-            firstname: fnm,
-            lastname: lnm,
-            salary
+    addMovie: async ({mid, name, duration}) => {
+        //insert movie
+        const movie = new MovieModel({
+            mid,
+            name,
+            duration
         })
-        await newUser.save()
-        return newUser
+
+        const newMovie = await movie.save()
+
+        return newMovie
+    },
+    movieByName: async ({name})=>{
+        const movie = await MovieModel.findOne({'name': name})
+        return movie
     }
 }
 
-//GqlHttp object
-const grpahqlHttp = graphqlHTTP({
+//Crete express graphql
+const graphqlHttp = graphqlHTTP({
     schema: gqlSchema,
     rootValue: rootResolver,
     graphiql: true
 })
 
-app.use("/graphql", grpahqlHttp)
+//Add graphqlHttp to express middleware
+app.use("/graphql", graphqlHttp)
 
 //helper function to connect to MongoDB asychronously
 const connectDB = async() => {
@@ -114,8 +121,8 @@ const connectDB = async() => {
     }
 }
 
-app.listen(SERVER_PORT, () => {
-    console.log('Server started')
+app.listen(PORT, () =>{
     connectDB()
-    console.log('http://localhost:4000/graphql')
+    console.log("GraphQL Server started")
+    console.log("http://localhost:4000/graphql")
 })
