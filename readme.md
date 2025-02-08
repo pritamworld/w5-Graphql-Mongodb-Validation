@@ -73,3 +73,64 @@ mutation{
     }
 }
 ```
+
+```
+query{
+  h1:hello
+  h2:hello
+  h3:hello
+  greet(name: "Pritesh")
+  welcome
+  m1:movie {
+   mid
+    name
+    duration
+  }
+  
+   m2:movie {
+
+    name
+    duration
+  }
+  
+  movies{
+    name
+  }
+}
+```
+
+```
+
+  
+  query getMovies($m1:String!, $m2:String!){
+      m2: movieByName(name: $m1){
+      ...MovieFields
+      }
+
+      m1: movieByName(name: $m2){
+       _id
+        mid
+        name
+        duration
+      }
+  }
+
+fragment MovieFields on Movie{
+  _id
+  
+    name
+    duration
+}
+```
+
+```
+
+
+mutation{
+  addMovie(mid:2, name:"Movie 2", duration:15.50){
+    mid
+    name
+    duration
+  }
+}
+```

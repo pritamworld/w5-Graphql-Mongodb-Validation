@@ -1,7 +1,8 @@
 const express = require('express')
-const { buildSchema } = require('graphql')
-const { graphqlHTTP } = require('express-graphql')
 const mongoose = require('mongoose')
+const { buildSchema } = require('graphql')
+const { graphqlHTTP } = require("express-graphql")
+const UserModel = require('./model/User')
 const MovieModel = require('./model/Movie')
 
 const app = express()
@@ -13,27 +14,44 @@ const gqlSchema = buildSchema(
         hello: String
         greet(name: String!): String
         welcome: [String]
+        user: User
+        users: [User]
         movie: Movie
         movies: [Movie]
         movieByName(name: String!): Movie
     }
     
     type Mutation{
+        addUser(uid: Int, fnm: String, lnm: String, salary: Float): User
         addMovie(mid: Int, name: String, duration:Float): Movie
     }
-    
+    type User{
+        uid: Int
+        firstname: String
+        lastname: String
+        salary: Float
+    }
+
     type Movie{
         _id: ID
         mid: Int
         name: String
         duration:Float
-    }
-`)
+    }`
+)  
 
 //Resolver
 const rootResolver = {
     hello: () => {
         return "Hello World"
+    },
+    welcome: () => {
+        return  [
+            "Good Evening",
+            "Good Morning",
+            "Good Afternoon",
+            "Welcome to GraphQL examples"
+        ]
     },
     greet: ({name})=>{
         return `Welcome, ${name}`
@@ -44,6 +62,47 @@ const rootResolver = {
             "Good Morning",
             "Good Afternoon"
         ]
+    },
+    user: async () => {
+        // const user = {
+        //     uid: 1,
+        //     fnm: "Pritesh",
+        //     lnm: "Patel",
+        //     salary: 500.50
+        // }
+        const user = await UserModel.findOne({})
+        console.log(user)
+        return user
+    },
+    users: async() => {
+        // const users = [{
+        //     uid: 1,
+        //     fnm: "Pritesh",
+        //     lnm: "Patel",
+        //     salary: 500.50
+        // },
+        // {
+        //     uid: 2,
+        //     fnm: "Test",
+        //     lnm: "Patel",
+        //     salary: 1500.70
+        // }]
+        const users = await UserModel.find({})
+        console.log(users)
+        return users
+    },
+    addUser: async(user) => {
+        console.log(user)
+        //Insert to Database
+        const {uid, fnm, lnm, salary} = user
+        const newUser = UserModel({
+            uid,
+            firstname: fnm,
+            lastname: lnm,
+            salary
+        })
+        await newUser.save()
+        return newUser
     },
     movie: async ()=>{
         // const movie = {
@@ -75,10 +134,8 @@ const rootResolver = {
             name,
             duration
         })
-
-        const newMovie = await movie.save()
-
-        return newMovie
+        const newUser = await movie.save()
+        return newUser
     },
     movieByName: async ({name})=>{
         const movie = await MovieModel.findOne({'name': name})
