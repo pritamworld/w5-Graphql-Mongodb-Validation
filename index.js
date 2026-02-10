@@ -25,6 +25,7 @@ const gqlSchema = buildSchema(
         addUser(uid: Int, fnm: String, lnm: String, salary: Float): User
         addMovie(mid: Int, name: String, duration:Float): Movie
     }
+
     type User{
         uid: Int
         firstname: String
@@ -160,14 +161,11 @@ const connectDB = async() => {
         //TODO - Replace you Connection String here
         const DB_NAME = "db_comp3133_employee"
         const DB_USER_NAME = "sa"
-        const DB_PASSWORD = 'UtHZ7JlQJby4pxeh'
+        const DB_PASSWORD = ''
         const CLUSTER_ID = '7wn4nmp'
         const DB_CONNECTION = `mongodb+srv://${DB_USER_NAME}:${DB_PASSWORD}@cluster0.${CLUSTER_ID}.mongodb.net/${DB_NAME}?retryWrites=true&w=majority&appName=Cluster0`
 
-        mongoose.connect(DB_CONNECTION, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        }).then( () => {
+        mongoose.connect(DB_CONNECTION).then( () => {
             console.log(`MongoDB connected`)
         }).catch( (err) => {
             console.log(`Error while connecting to MongoDB : ${JSON.stringify(err)}`)
