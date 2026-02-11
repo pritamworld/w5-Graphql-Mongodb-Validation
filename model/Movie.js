@@ -1,10 +1,6 @@
 const mongoose = require('mongoose')
 
 const movieSchema = mongoose.Schema({
-    mid:{
-        type: Number,
-        required: true
-    },
     name: {
         type: String,
         required: true,
