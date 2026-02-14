@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 //GraphQL related imports
 const { buildSchema } = require('graphql')
-const { graphqlHTTP } = require("express-graphql")
+const { createHandler } = require('graphql-http/lib/use/express');
 
 //Models
 const UserModel = require('./model/User')
