@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 //GraphQL related imports
 const { buildSchema } = require('graphql')
-const { graphqlHTTP } = require("express-graphql")
+const { createHandler } = require('graphql-http/lib/use/express');
 
 //Models
 const UserModel = require('./model/User')
@@ -178,10 +178,9 @@ const rootResolver = {
 }
 
 //Create express graphql
-const graphqlHttp = graphqlHTTP({
+const graphqlHttp = createHandler({
     schema: gqlSchema,
-    rootValue: rootResolver,
-    graphiql: true //Set to true to enable GraphiQL UI
+    rootValue: rootResolver
 })
 
 //Add graphqlHttp to express middleware
