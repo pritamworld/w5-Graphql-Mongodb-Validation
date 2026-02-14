@@ -1,9 +1,12 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const { buildSchema } = require('graphql')
-const { graphqlHTTP } = require("express-graphql")
+
 const UserModel = require('./model/User')
 const MovieModel = require('./model/Movie')
+
+//GraphQL related imports
+const { buildSchema } = require('graphql')
+const { createHandler } = require('graphql-http/lib/use/express');
 
 const app = express()
 const PORT = 4000
@@ -145,10 +148,9 @@ const rootResolver = {
 }
 
 //Crete express graphql
-const graphqlHttp = graphqlHTTP({
+const graphqlHttp = createHandler({
     schema: gqlSchema,
-    rootValue: rootResolver,
-    graphiql: true
+    rootValue: rootResolver
 })
 
 //Add graphqlHttp to express middleware
