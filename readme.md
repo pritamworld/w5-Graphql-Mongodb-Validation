@@ -145,10 +145,9 @@ const rootResolver = {
 ### Create express graphql
 
 ```
-const graphqlHttp = graphqlHTTP({
+const graphqlHttp = createHandler({
     schema: gqlSchema,
-    rootValue: rootResolver,
-    graphiql: true
+    rootValue: rootResolver
 })
 ```
 
