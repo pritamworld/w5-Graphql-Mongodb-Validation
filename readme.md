@@ -1,6 +1,25 @@
 # Reference Code (Copy to index.js)
 
-### Schema
+## Resulting Clean Mutation Example
+
+### Create User (Clean API)
+
+```
+mutation {
+  createUser(input: {
+    uid: 1,
+    firstname: "John",
+    lastname: "Doe",
+    salary: 5000
+  }) {
+    uid
+    firstname
+    salary
+  }
+}
+```
+
+## Schema
 
 ```
 const gqlSchema = buildSchema(
@@ -36,7 +55,7 @@ const gqlSchema = buildSchema(
 ) 
 ```
 
-### Resolvers
+## Resolvers
 
 ```
 const rootResolver = {
@@ -142,7 +161,7 @@ const rootResolver = {
 }
 ```
 
-### Create express graphql
+## Create express graphql
 
 ```
 const graphqlHttp = createHandler({
@@ -151,14 +170,14 @@ const graphqlHttp = createHandler({
 })
 ```
 
-## Add graphqlHttp to express middleware
+### Add graphqlHttp to express middleware
 ```
 app.use("/graphql", graphqlHttp)
 ```
 
 # Sample GraphQL Requests
 
-### Queries
+## Queries
 ``` 
   query{
  	welcome
@@ -194,7 +213,7 @@ app.use("/graphql", graphqlHttp)
 }
 ```
 
-### Mutations
+## Mutations
 
 ```
 mutation{
@@ -214,7 +233,7 @@ mutation{
 }
 ```
 
-### Fragment Example
+## Fragment Example
 
 ```
 fragment UserFields on User{
